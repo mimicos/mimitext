@@ -10,6 +10,8 @@ Possibly unique to mimitext is that it also allows you to peek at the possible n
 
 When text is generated normally, the user can click on a letter in the possible result to add the text *up to* that letter, rather than being forced to accept the whole result. This should allow an easier way to move forward with less manual editing.
 
+**Warning!** This is new and heavily in-progress. It may break in subtle, unexpected ways. The GUI is also mostly placeholder.
+
 ## Sample Images
 
 ### "Normal" mode
