@@ -10,6 +10,20 @@ Possibly unique to mimitext is that it also allows you to peek at the possible n
 
 When text is generated normally, the user can click on a letter in the possible result to add the text *up to* that letter, rather than being forced to accept the whole result. This should allow an easier way to move forward with less manual editing.
 
+## Sample Images
+
+### "Normal" mode
+[Normal Mode Example](demo/demo01.png)
+
+When the user highlights a character it shows that, upon click, all text up to that point is transferred; the text after is deleted.
+
+### "Token" mode
+[Token Mode Example](demo/demo02.png)
+
+Here a user can manually click on the next token to add to the text. This might be useful for when the model isn't generating very interesting responses on its own.
+
+The interior shaded cells currently only represent the token's position out of 100. Ideally, it would be a useful representation of the relative probabilities.
+
 ## GUI
 There are five buttons making up the webgui right now.
 
