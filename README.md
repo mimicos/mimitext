@@ -53,6 +53,9 @@ This simply repeats the generation request after one is returned. The number is 
 ### Temperature
 Randomness. 0.3~0.7 is a good area to try for many models. *This value impacts the result of the SoftMax column in the Token mode.*
 
+### Number of Responses
+This passes a request for multiple responses to `generate`. This can be faster than generating multiple sequences one at a time, but it appears to impact the ram/video ram usage of the model.
+
 ### Response Length
 The length (in tokens) to request from the model. These are sometimes words, parts of words, individual letters, or less.
 
@@ -67,4 +70,4 @@ Higher values penalize tokens that have appeared in the input more and more, enc
 Currently this has no impact on the token list that's generated in token mode.
 
 ### num_beams
-TODO: describe. Beam search.
+A minimal way to describe beam search is that it attempts to gather a sequence with the overall highest probability, rather than just the series of most likely tokens. Setting it to 1 disables it. This may impact ram/video ram usage.
