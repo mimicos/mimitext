@@ -1,0 +1,5 @@
+torch
+transformers
+Flask
+numpy
+git+git://github.com/finetuneanon/transformers@gpt-neo-dungeon-localattention1
