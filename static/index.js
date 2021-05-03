@@ -174,8 +174,8 @@ function createTokens(jsonData) {
 }
 
 function toggleOptions() {
-    var e = document.getElementById("options");
-    e.classList.toggle("hidden");
+    document.getElementById("options").classList.toggle("hidden");
+    document.getElementById("fullelement").classList.toggle("hidden");
 }
 
 function isPickgenOn() {
@@ -189,13 +189,13 @@ function pickgenToggle() {
 }
 
 function swapGenerateToTokens() {
-    var bp = document.getElementById("bottomPanel");
-    bp.classList.toggle("hidden")
-    var tp = document.getElementById("tokenPanel");
-    tp.classList.toggle("hidden")
-    var textp = document.getElementById("textPanel");
-    textp.classList.toggle("textpanelwide");
-    textp.classList.toggle("textpaneltall");
+    //var bp = document.getElementById("bottomPanel");
+    //bp.classList.toggle("hidden")
+    //var tp = document.getElementById("tokenPanel");
+    //tp.classList.toggle("hidden")
+    //var textp = document.getElementById("textPanel");
+    //textp.classList.toggle("textpanelwide");
+    //textp.classList.toggle("textpaneltall");
     document.getElementById("swapmodeButton").classList.toggle("activated");
     tokenmode = !tokenmode;
 }
