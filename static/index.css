@@ -41,14 +41,14 @@ html, body {
 
 #sparePanel {
     grid-column-start: 2;
-    grid-row-start: 2;
-    grid-row-end: 4;
+    grid-row-start: 3;
     background-color: #eeeeee;
 }
 
 #tokenPanel {
     grid-column-start: 2;
     grid-row-start: 1;
+    grid-row-end: 3;
     background-color: #eeeeee;
 }
 
@@ -125,6 +125,8 @@ html, body {
 }
 
 #tokenpanel {
+    grid-column-start: 2;
+    grid-row-start: 1;
     overflow: auto;
 }
 
