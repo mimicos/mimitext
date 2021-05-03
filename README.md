@@ -13,12 +13,12 @@ When text is generated normally, the user can click on a letter in the possible 
 ## Sample Images
 
 ### "Normal" mode
-[Normal Mode Example](demo/demo01.png)
+![Normal Mode Example](demo/demo01.png)
 
 When the user highlights a character it shows that, upon click, all text up to that point is transferred; the text after is deleted.
 
 ### "Token" mode
-[Token Mode Example](demo/demo02.png)
+![Token Mode Example](demo/demo02.png)
 
 Here a user can manually click on the next token to add to the text. This might be useful for when the model isn't generating very interesting responses on its own.
 
