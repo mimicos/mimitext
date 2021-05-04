@@ -71,6 +71,8 @@ def generateTokens(data):
             maxInputLength = MAX_INPUT_LENGTH - 1 # (we just want one token)
             print("Generating tokens...")
             input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
+            if input_ids.size()[1] > maxInputLength:
+                input_ids = input_ids.narrow(1, -maxInputLength, maxInputLength)
             input_ids = input_ids.to(DEVICE)
             a = model(input_ids)
             logits = a.logits[:, -1, :]
