@@ -33,6 +33,7 @@ function updateResponsesWithListeners() {
 		if (isPickgenOn()) {
 		    requestGenerate();
 		}
+		autoscrolldown();
 	    });
 	    el.appendChild(span);
         });
@@ -126,7 +127,8 @@ function tokenClicked() {
     tt.parentNode.removeChild(tt);
     if (isPickgenOn()) {
 	requestGenerate();
-    }    
+    }
+    autoscrolldown();
 }
 
 function createTokens(jsonData) {
@@ -188,14 +190,12 @@ function pickgenToggle() {
     e.classList.toggle("activated");
 }
 
+function autoscrolldown() {
+    var w = document.getElementById("textPanel");
+    w.scrollTop = w.scrollHeight;
+}
+
 function swapGenerateToTokens() {
-    //var bp = document.getElementById("bottomPanel");
-    //bp.classList.toggle("hidden")
-    //var tp = document.getElementById("tokenPanel");
-    //tp.classList.toggle("hidden")
-    //var textp = document.getElementById("textPanel");
-    //textp.classList.toggle("textpanelwide");
-    //textp.classList.toggle("textpaneltall");
     document.getElementById("swapmodeButton").classList.toggle("activated");
     tokenmode = !tokenmode;
 }
