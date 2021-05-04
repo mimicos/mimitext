@@ -105,7 +105,7 @@ function createResponses(responses) {
 	var nr = document.createElement("div");
 	nr.className = "response";
 	nr.textContent = r
-	bp.appendChild(nr);
+	bp.prepend(nr);
     }
     updateResponsesWithListeners();
 }
