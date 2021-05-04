@@ -1,4 +1,4 @@
-import sys, time, gc
+import sys, time, gc, configparser
 import webserver, multiprocessing # The webserver frontend bits
 from transformers import AutoModelForCausalLM, AutoTokenizer # The transformer bits
 import torch
@@ -12,14 +12,16 @@ if len(sys.argv) < 2:
     print(" Exiting ...")
     exit()
 
+config = configparser.ConfigParser()
+config.read("config.ini")
+
 running = True
 modelpath = sys.argv[1]
 
-# Change these if you like, but be careful
-MAX_INPUT_LENGTH = 1024 # 1024 for gpt2, 2048 for gpt-neo, or use less for faster results
-DEVICE = "cuda" # use cuda or cpu
-GC_EVERY_TIME = True # In hopes of avoiding OOM errors, but it may not be necessary.
-HALF_PRECISION = True # Half precision will take up much less memory.
+MAX_INPUT_LENGTH = int(config['Settings']['MaxInputLength'])
+DEVICE = config['Settings']['Device']
+GC_EVERY_TIME = config['Settings']['UseGC'] == "yes"
+HALF_PRECISION = config['Settings']['HalfPrecision'] == "yes"
 
 print("Model path: " + modelpath)
 
