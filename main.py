@@ -70,7 +70,7 @@ def generateTokens(data):
             print("Generating tokens...")
             input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
             input_ids = input_ids.to(DEVICE)
-            a = model.forward(input_ids)
+            a = model(input_ids)
             logits = a.logits[:, -1, :]
             topk_results = torch.topk(logits, k=100)
             topk_list = tokenizer.batch_decode(topk_results[1].tolist()[0])
