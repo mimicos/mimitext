@@ -145,6 +145,7 @@ html, body {
 }
 
 #tokenPanel tr td {
+    position: relative;
     max-width: 0;
     height: 1em;
     z-index: 0;
@@ -160,10 +161,13 @@ html, body {
 
 .percentbar {
     position: absolute;
-    background-color: #d1d1d1ff;
+    background-color: #d1d1d199;
     top: 0;
     left: 0;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 40%;
     z-index: -1;
 }
 
