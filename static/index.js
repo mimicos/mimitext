@@ -166,7 +166,7 @@ function createTokens(jsonData) {
 	row.appendChild(td1);
 	var td1bar = document.createElement("div");
 	td1bar.classList.add("percentbar");
-	td1bar.style.width = (topk_probs[x]*100)+"%";
+	td1bar.style.height = (topk_probs[x]*100)+"%";
 	td1.appendChild(td1bar);
 	
 	var td2 = document.createElement("td");
@@ -175,7 +175,7 @@ function createTokens(jsonData) {
 	row.appendChild(td2);
 	var td2bar = document.createElement("div");
 	td2bar.classList.add("percentbar");
-	td2bar.style.width = (sampled_probs[x]*100)+"%";
+	td2bar.style.height = (sampled_probs[x]*100)+"%";
 	td2.appendChild(td2bar);
     }
 }
