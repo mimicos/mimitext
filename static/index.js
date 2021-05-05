@@ -24,8 +24,8 @@ function updateResponsesWithListeners() {
 		    position++;
 		    el = el.previousSibling;
                 }
-                console.log(this.innerHTML + ':' + position);
-		console.log(this.parentElement.getElementsByClassName('fulltext')[0].textContent.slice(0, position));
+                //console.log(this.innerHTML + ':' + position);
+		//console.log(this.parentElement.getElementsByClassName('fulltext')[0].textContent.slice(0, position));
 		document.getElementById("textPanel").value += this.parentElement.getElementsByClassName('fulltext')[0].textContent.slice(0, position);
 		clearResponses();
 		generated = 0;
@@ -47,11 +47,6 @@ function jsonifyData() {
 	       top_p: g("top_p"), top_k: g("top_k"), num_beams: g("num_beams"), repetition_penalty: g("repetition_penalty"),
 	       token_mode: tokenmode
 	      }
-    
-    console.log(msg)
-    var jsonmsg = JSON.stringify(msg);
-    console.log(jsonmsg)
-    //console.log(jsonmsg);
     return msg;
 }
 
@@ -101,7 +96,6 @@ function createResponses(responses) {
     if (responses.length == 0) return; // For when token mode is on
     var bp = document.getElementById("bottomPanel");
     for (const r of responses) {
-	console.log(r);
 	var nr = document.createElement("div");
 	nr.className = "response";
 	nr.textContent = r
@@ -137,7 +131,6 @@ function createTokens(jsonData) {
     if (oldTable != undefined) {
 	tokenTable.parentNode.removeChild(oldTable);
     }
-    console.log(jsonData);
     var tp = document.getElementById("tokenPanel");
     var ttable = document.createElement("table");
     ttable.id = "tokenTable";
@@ -154,7 +147,6 @@ function createTokens(jsonData) {
     // Softmaxing
     topk_probs = softmax(jsonData.topk_probs)
     sampled_probs = softmax(jsonData.sampled_probs)
-    console.log(sampled_probs)
 
     // Refactoring this will happen. later.
     for (var x = 0; x < jsonData.topk_tokens.length; x ++) {

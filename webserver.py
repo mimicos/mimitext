@@ -6,12 +6,10 @@ app = Flask(__name__, static_url_path='/')
 
 @app.route('/')
 def index():
-    global pipe
-    print(pipe)
     return render_template("index.html")
 
 @app.route('/gen', methods=['POST'])
 def gen():
-    print("/gen receives:", type(request.json), request.json)
+    #print("/gen receives:", type(request.json), request.json)
     pipe.send(request.json)
     return pipe.recv()

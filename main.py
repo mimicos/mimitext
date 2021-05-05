@@ -34,15 +34,15 @@ def generateText(data):
     with torch.cuda.amp.autocast(enabled=True):
         with torch.no_grad():
             maxInputLength = MAX_INPUT_LENGTH - int(data['responseLength']) # This is how much of the context we can use based on the requested response size
-            print("Generating with", data)
+            print("Generating...")
             t1 = time.time()
             input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
-            print("input_ids", input_ids)
+            #print("input_ids", input_ids)
             if input_ids.size()[1] > maxInputLength:
                 input_ids = input_ids.narrow(1, -maxInputLength, maxInputLength)
             input_ids = input_ids.to(DEVICE)
-            print("Resized tokens:", tokenizer.decode(input_ids[0]))
-            print("len", len(input_ids[0]))
+            #print("Resized tokens:", tokenizer.decode(input_ids[0]))
+            #print("len", len(input_ids[0]))
             gen_tokens = model.generate(input_ids, do_sample=True, temperature=float(data['cTemperature']),
                                         max_length=min(MAX_INPUT_LENGTH, input_ids.size()[1] + int(data['responseLength'])),
                                         num_return_sequences=int(data['numResponses']), top_p=float(data['top_p']), top_k=int(data['top_k']),
@@ -61,13 +61,13 @@ def generateText(data):
             }
             t2 = time.time()
             print("Finished in {} seconds".format(t2-t1))
-            print("Responses from python:", response);
             return response;
 
 def generateTokens(data):
     global model, tokenizer, mainpipe
     with torch.cuda.amp.autocast(enabled=True):
         with torch.no_grad():
+            t1 = time.time()
             maxInputLength = MAX_INPUT_LENGTH - 1 # (we just want one token)
             print("Generating tokens...")
             input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
@@ -100,6 +100,8 @@ def generateTokens(data):
                 "sampled_probs": sampled_probs,
                 "topk_probs": topk_probs
             }
+            t2 = time.time()
+            print("Finished generating tokens in", t2-t1)
             return response;
         
 # Load the language model
@@ -124,7 +126,6 @@ while running:
         gc.collect()
         torch.cuda.empty_cache()
     wsdata = mainpipe.recv()
-    print("Main thread Datatype:", type(wsdata), wsdata)
 
     if bool(wsdata['token_mode']):
         mainpipe.send(generateTokens(wsdata))
