@@ -151,6 +151,11 @@ function createTokens(jsonData) {
     tr1.appendChild(th1);
     tr1.appendChild(th2);
 
+    // Softmaxing
+    topk_probs = softmax(jsonData.topk_probs)
+    sampled_probs = softmax(jsonData.sampled_probs)
+    console.log(sampled_probs)
+
     // Refactoring this will happen. later.
     for (var x = 0; x < jsonData.topk_tokens.length; x ++) {
 	var row = document.createElement("tr");
@@ -161,7 +166,7 @@ function createTokens(jsonData) {
 	row.appendChild(td1);
 	var td1bar = document.createElement("div");
 	td1bar.classList.add("percentbar");
-	td1bar.style.width = (100-x)+"%";
+	td1bar.style.width = (topk_probs[x]*100)+"%";
 	td1.appendChild(td1bar);
 	
 	var td2 = document.createElement("td");
@@ -170,7 +175,7 @@ function createTokens(jsonData) {
 	row.appendChild(td2);
 	var td2bar = document.createElement("div");
 	td2bar.classList.add("percentbar");
-	td2bar.style.width = (100-x)+"%";
+	td2bar.style.width = (sampled_probs[x]*100)+"%";
 	td2.appendChild(td2bar);
     }
 }
@@ -198,6 +203,14 @@ function autoscrolldown() {
 function swapGenerateToTokens() {
     document.getElementById("swapmodeButton").classList.toggle("activated");
     tokenmode = !tokenmode;
+}
+
+// src: https://gist.github.com/cyphunk/6c255fa05dd30e69f438a930faeb53fe#gistcomment-3649882
+function softmax(logits) {
+    const maxLogit = Math.max(...logits);
+    const scores = logits.map(l => Math.exp(l - maxLogit));
+    const denom = scores.reduce((a, b) => a + b);
+    return scores.map(s => s / denom);
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {

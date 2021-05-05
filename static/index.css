@@ -154,20 +154,18 @@ html, body {
 #tokenPanel td:hover {
     color: rgb(16,16,16);
     background-color: black;
-    box-shadow: 0px 0px 10px white;
+    box-shadow: 0px 0px 10px 10px white;
     background-color: white;
     transition: all 0.4s ease-in-out;
 }
 
 .percentbar {
     position: absolute;
-    background-color: #d1d1d199;
-    top: 0;
-    left: 0;
+    background-color: #c1c1c199;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 40%;
+    height: 75%;
     z-index: -1;
 }
 

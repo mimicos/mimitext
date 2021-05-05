@@ -77,7 +77,8 @@ def generateTokens(data):
             a = model(input_ids)
             logits = a.logits[:, -1, :]
             topk_results = torch.topk(logits, k=100)
-            topk_list = tokenizer.batch_decode(topk_results[1].tolist()[0])
+            topk_tolist = topk_results[1].tolist()[0]
+            topk_list = tokenizer.batch_decode(topk_tolist)
             if (float(data['cTemperature']) > 0):
                 logits = logits / float(data['cTemperature'])
             softmax = torch.nn.functional.softmax(logits, dim=-1)
@@ -85,13 +86,19 @@ def generateTokens(data):
             sampled_list = tokenizer.batch_decode(sampled.tolist()[0])
 
             # For examining the actual probabilities - a work in progress
-            #for i in range(len(sampled_list)):
-            #    print(sampled_list[i], int(sampled[0][i]), float(softmax[0][int(sampled[0][i])]))
-                
+            topk_probs = []
+            sampled_probs = []
+            for i in range(len(sampled_list)):
+                #print(sampled_list[i], int(sampled[0][i]), float(softmax[0][int(sampled[0][i])]))
+                sampled_probs.append(float(logits[0][int(sampled[0][i])]))
+                topk_probs.append(float(logits[0][topk_tolist[i]]))
+
             response = {
                 "responses": [],
                 "topk_tokens": topk_list,
-                "softmax_tokens": sampled_list
+                "softmax_tokens": sampled_list,
+                "sampled_probs": sampled_probs,
+                "topk_probs": topk_probs
             }
             return response;
         
