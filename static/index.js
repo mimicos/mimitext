@@ -147,7 +147,7 @@ function createTokens(jsonData) {
     var th1 = document.createElement("th");
     th1.textContent = "TopK";
     var th2 = document.createElement("th");
-    th2.textContent = "SoftMax";
+    th2.textContent = "Sampled";
     tr1.appendChild(th1);
     tr1.appendChild(th2);
 
