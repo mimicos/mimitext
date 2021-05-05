@@ -117,8 +117,9 @@ function clearResponses() {
 
 function tokenClicked() {
     document.getElementById("textPanel").value += this.textContent;
-    var tt = document.getElementById("tokenTable");
-    tt.parentNode.removeChild(tt);
+    clearResponses();
+    //var tt = document.getElementById("tokenTable");
+    //tt.parentNode.removeChild(tt);
     if (isPickgenOn()) {
 	requestGenerate();
     }
