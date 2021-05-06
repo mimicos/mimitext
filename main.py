@@ -18,6 +18,8 @@ config.read("config.ini")
 running = True
 modelpath = sys.argv[1]
 
+BIND_ADDRESS = config['Settings']['BindAddress']
+BIND_PORT = int(config['Settings']['BindPort'])
 MAX_INPUT_LENGTH = int(config['Settings']['MaxInputLength'])
 DEVICE = config['Settings']['Device']
 GC_EVERY_TIME = config['Settings']['UseGC'] == "yes"
@@ -27,7 +29,7 @@ print("Model path: " + modelpath)
 
 def runFlask(pipe):
     webserver.pipe = pipe
-    webserver.app.run(host="localhost", port="31013", debug=False)
+    webserver.app.run(host=BIND_ADDRESS, port=BIND_PORT, debug=False)
 
 def generateText(data):
     global model, tokenizer, mainpipe
