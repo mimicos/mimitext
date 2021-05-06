@@ -48,7 +48,9 @@ These options will affect the way text is generated. Some are passed straight to
 This simply repeats the generation request after one is returned. The number is how many repeats. For instance, setting it to three is identical to just hitting "Generate" three times in a row. There's currently no way to abort this process, so don't accidentally enter a huge number.
 
 ### Temperature
-Randomness. 0.3~0.7 is a good area to try for many models. This value is also applied in Token Mode.
+Affects randomness (which also applies to the values seen in Token Mode.)
+Values below 1 increase the likelihood of likely results (generally resulting in coherent messages) while values above 1 effectively reduce the likelihood of all results.
+0.5 is often a safe value, but a range from 0.3 to nearly 1.0 is worth trying. Try values over 1 for really entertainingly strange responses.
 
 ### Number of Responses
 This passes a request for multiple responses to `generate`. This can be faster than generating multiple sequences one at a time, but it appears to impact the ram/video ram usage of the model. If you get Out-of-Memory crashes, this may be the culprit.
