@@ -31,6 +31,23 @@ def runFlask(pipe):
     webserver.pipe = pipe
     webserver.app.run(host=BIND_ADDRESS, port=BIND_PORT, debug=False)
 
+# Preprocess the json data message to ensure all values are present and reasonable
+def dataPreprocess(data):
+    try:
+        data['validRequest'] = True
+        data['cTemperature'] = float(data['cTemperature']) if 'cTemperature' in data else 0.5
+        data['responseLength'] = int(data['responseLength']) if 'responseLength' in data else 30
+        data['numResponses'] = int(data['numResponses']) if 'numResponses' in data else 1
+        data['top_p'] = float(data['top_p']) if 'top_p' in data else 1
+        data['top_k'] = int(data['top_k']) if 'top_k' in data else 0
+        data['num_beams'] = int(data['num_beams']) if 'num_beams' in data else 1
+        data['repetition_penalty'] = float(data['repetition_penalty']) if 'repetition_penalty' in data else 1.0
+        data['token_mode'] = bool(data['token_mode']) if 'token_mode' in data else False
+    except KeyError:
+        data['validRequest'] = False
+        
+    return data
+    
 def generateText(data):
     global model, tokenizer, mainpipe
     with torch.cuda.amp.autocast(enabled=True):
@@ -45,10 +62,10 @@ def generateText(data):
             input_ids = input_ids.to(DEVICE)
             #print("Resized tokens:", tokenizer.decode(input_ids[0]))
             #print("len", len(input_ids[0]))
-            gen_tokens = model.generate(input_ids, do_sample=True, temperature=float(data['cTemperature']),
-                                        max_length=min(MAX_INPUT_LENGTH, input_ids.size()[1] + int(data['responseLength'])),
-                                        num_return_sequences=int(data['numResponses']), top_p=float(data['top_p']), top_k=int(data['top_k']),
-                                        num_beams=int(data['num_beams']), repetition_penalty=float(data['repetition_penalty']))
+            gen_tokens = model.generate(input_ids, do_sample=True, temperature=data['cTemperature'],
+                                        max_length=min(MAX_INPUT_LENGTH, input_ids.size()[1] + data['responseLength']),
+                                        num_return_sequences=data['numResponses'], top_p=data['top_p'], top_k=data['top_k'],
+                                        num_beams=data['num_beams'], repetition_penalty=data['repetition_penalty'])
             sequences = []
             strsequences = []
             for x in gen_tokens:
@@ -91,7 +108,6 @@ def generateTokens(data):
             topk_probs = []
             sampled_probs = []
             for i in range(len(sampled_list)):
-                #print(sampled_list[i], int(sampled[0][i]), float(softmax[0][int(sampled[0][i])]))
                 sampled_probs.append(float(logits[0][int(sampled[0][i])]))
                 topk_probs.append(float(logits[0][topk_tolist[i]]))
 
@@ -128,8 +144,10 @@ while running:
         gc.collect()
         torch.cuda.empty_cache()
     wsdata = mainpipe.recv()
+    wsdata = dataPreprocess(wsdata)
 
-    if bool(wsdata['token_mode']):
-        mainpipe.send(generateTokens(wsdata))
-    else:
-        mainpipe.send(generateText(wsdata))
+    if wsdata['validRequest']:
+        if wsdata['token_mode']:
+            mainpipe.send(generateTokens(wsdata))
+        else:
+            mainpipe.send(generateText(wsdata))
