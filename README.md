@@ -2,15 +2,21 @@
 
 ## Overview
 
-Mimitext is an interface to Huggingface's transformers library, providing a proof-of-concept user interface for the purposes of inference. It generates text based on the text you give it, with a number of configurable options.
+Mimitext is an interface to Huggingface's transformers library, providing a simple user interface for customized inference. It generates text based on the text you give it. This can be used as a writing aid, for experimentation on an AI model, or played like an interactive story. There are a number of configurable options and a few features that I believe are unique to this software at the time of writing.
 
-This is provided via **Flask** and runs on **localhost**. Despite being a simple webserver, mimitext is currently *not intended for more than one user at a time.* It will likely break horribly in that scenario *and is not secure against random users.* However, the webserver component means it can be easily run on a distant machine and operated from another. For this, I recommend *ssh -D*. Again, this isn't intended to be public-facing.
+It's caleld Mimitext because of my username and because after nine days I couldn't think of a good name.
 
-Possibly unique to mimitext is that it also allows you to peek at the possible next tokens for a given input. For instance, you can view the TopK and SoftMax results from attempting to move the model forward. These tokens can be added to the text-so-far with a click. Of course, conventional string generation (currently provided by `generate` is still available.
+This is provided via **Flask** and runs on **localhost**. Despite being a simple webserver, mimitext is currently *not intended for more than one user at a time.* It will likely break horribly in that scenario right now, although a goal is to make it functional for a small number of users. It still isn't intended to be public-facing, where malicious users could intentionally send requests to slow it down.
 
-When text is generated normally, the user can click on a letter in the possible result to add the text *up to* that letter, rather than being forced to accept the whole result. This should allow an easier way to move forward with less manual editing.
+However, the webserver component means it can be easily run on a distant machine and operated from another. For this, I recommend *ssh -D*. Again, this isn't intended to be public-facing either, but it may be convenient for certain uses.
 
-**Warning!** This is new and heavily in-progress. It may break in subtle, unexpected ways. The GUI is also under heavy construction.
+Possibly unique to Mimitext is that you can view single token probabilities instead of generating entire text sequences. As an example, if you input "The", enable "Token Mode" and then hit "Generate", the rightmost column will fill with a table of tokens. The inner shading represents the probability of that token being sampled for use out of the 100 tokens the table is limited to. This lets you take a peek at what the model might be "thinking" of adding, but may never actually reach. Clicking one such token adds it to the text as usual, and if "Quickgen" is enabled, a new batch of tokens is made off the new total text input.
+
+Another novel feature is that when text is generated normally, the user can click on a letter in the possible result to add the text *up to* that letter, rather than being forced to accept the whole result. This should allow an easier way to move forward with less manual editing. If you get a sequence of 50 tokens, but only want the first 10, a single click will truncate the other forty—and if "Quickgen" is on, the next sequence(s) will begin to generate automatically.
+
+The page brings in an almost blank `custom.css` which may be used to theme the program in any way you like.
+
+**Warning!** This is new and heavily in-progress. It may break in subtle, unexpected ways. The GUI is also under heavy construction and subject to constant tinkering.
 
 ## Sample
 ![Example](demo/demo_01.png)
@@ -21,7 +27,7 @@ Three responses wait in the response panel. A list of TopK tokens and the tokens
 There are five buttons making up the webgui right now.
 
 ### Generate
-This sends a request to the server, which is then sent to the model, via POST. The button turns black when a reply from the server is pending. If it stays that way, it's likely the server encountered an error. It's best to refresh the page and reload the program if this happens.
+This sends a request to the server, which is then sent to the model, via POST. The button turns black when a reply from the server is pending. If it stays that way, it's likely the server encountered an error. It's best to refresh the page and reload the program if this happens until more robust erorr handling and recovery is implemented.
 
 ### Options
 This displays the **Generation Options** seen below.
@@ -33,31 +39,31 @@ This will erase both the possible responses (below the main text) and the list o
 When a possible response is clicked, or a token is clicked, the next generate request is made automatically (as if the user had clicked Generate immediately afterward.)
 
 ### Token Mode
-In Token Mode, only a response length of 1 is used. However, the user can view many of the possibilities and decide which one they wish to keep, instead of letting the model decide by the probability score. This disables the response generation entirely. Looking at only one token's possibilities this way is very fast.
+In Token Mode, only a response length of 1 is used. However, the user can view many of the possibilities and decide which one they wish to keep, instead of letting the model decide by the probability score. This disables the response generation entirely. Looking at only one token's possibilities this way is very fast - roughly the same as using response length = 1 with normal generation. This can be useful when the model is "stumped" and dead-set on a crummy response.
 
 ## Generation Options
-These are almost identical to the transformers `generate` call; the values from the interface are passed directly into it.
+These options will affect the way text is generated. Some are passed straight to `transformers`, while others control the program execution itself.
 
 ### Autogenerate
-This simply repeats the generation request after one is returned. The number is how many repeats. For instance, setting it to three is identical to just hitting "Generate" three times in a row.
+This simply repeats the generation request after one is returned. The number is how many repeats. For instance, setting it to three is identical to just hitting "Generate" three times in a row. There's currently no way to abort this process, so don't accidentally enter a huge number.
 
 ### Temperature
-Randomness. 0.3~0.7 is a good area to try for many models. *This value impacts the result of the SoftMax column in the Token mode.*
+Randomness. 0.3~0.7 is a good area to try for many models. This value is also applied in Token Mode.
 
 ### Number of Responses
-This passes a request for multiple responses to `generate`. This can be faster than generating multiple sequences one at a time, but it appears to impact the ram/video ram usage of the model.
+This passes a request for multiple responses to `generate`. This can be faster than generating multiple sequences one at a time, but it appears to impact the ram/video ram usage of the model. If you get Out-of-Memory crashes, this may be the culprit.
 
 ### Response Length
 The length (in tokens) to request from the model. These are sometimes words, parts of words, individual letters, or less.
 
-### top_p (nucleus) sampling
+### top_p
 In a nutshell, this restricts the random choice of the next token to a cumulative probability. This can allow a large number of reasonably likely tokens to be considered while pruning the tokens the model thinks are very unlikely. Try values between 0.90 and 0.95 if you use it at all, or simply leave it at 1.
 
-### top_k sampling
+### top_k
 Restricts the possible results to the x most likely tokens. 0 to disable.
 
 ### Repetition Penalty
-Higher values penalize tokens that have appeared in the input more and more, encouraging the responses to feel new. This sometimes has an unintended effect, as many tokens show up many times (the, The, names, and so on.)
+Higher values penalize tokens that have appeared in the input more and more, encouraging the responses to feel new. This sometimes has an unintended effect, as many tokens show up many times (the, The, names, and so on.) Consider values from 1 (off) to 1.25 at first.
 Currently this has no impact on the token list that's generated in token mode.
 
 ### num_beams
