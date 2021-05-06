@@ -10,6 +10,7 @@ html, body {
 	max-width: 100%;
 }
 
+
 #fullelement {
     display: grid;
     grid-template-columns: 80fr 20fr;
@@ -57,12 +58,45 @@ html, body {
 }
 
 #options {
-    height: 100vh;
     margin: 1em;
     overflow-y: scroll;
     font-size: 1.5vw;
-    overflow-x: scroll;
+    overflow-x: hidden;
 	overflow-y: scroll;
+}
+
+#options form {
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+}
+
+#options div {
+    display: block;
+}
+
+#options label {
+}
+
+#options label, input {
+    font-size: max(1.5vw, 14px);
+}
+
+#options input {
+    margin-bottom: 20px;
+    padding: 5px;
+    border: 2px solid #232323;
+    box-shadow:0 0 10px 5px rgba(0,0,0,.14);
+    border-radius:10px;
+    width: 5em;
+}
+
+#options legend {
+    margin-top: 2vh;
+    font-size: max(1.7vw, 14px);
+    background-color: #333333;
+    color: white;
+    padding: 6px 16px;
 }
 
 .response {
@@ -116,8 +150,6 @@ html, body {
 .fulltext {
     display: none;
 }
-
-
 
 .activated {
     background-color: #333399;

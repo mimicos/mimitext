@@ -14,29 +14,52 @@
       <div id="exitOptionsButton" class="normalbutton">Exit Options</div><br><br>
       <div>Generation options. Passed to the model each time responses are requested.</div><br>
       <form>
-	<label for="autogen">Autogenerate: Repeat generation up to x times</label><br>
-	<input type="number" id="autogen" name="autogen" step=1 value=1><br>
+	<fieldset>
+	  <legend>Generation Variables</legend>
+	  <div>
+	    <label for="cTemperature">Temperature (Randomness)</label><br>
+	    <input type="number" id="cTemperature" name="cTemperature" step=0.1 value=0.5><br>
+	  </div>
+
+	  <div>
+	    <label for="responseLength">Response Length</label><br>
+	    <input type="number" id="responseLength" name="responseLength" step=1 value=40><br>
+	  </div>
+
+	  <div>
+	    <label for="top_p">top_p (nucleus) sampling</label><br>
+	    <input type="number" id="top_p" name="top_p" step=0.01 value=1><br>
+	  </div>
+
+	  <div>
+	    <label for="top_k">top_k sampling</label><br>
+	    <input type="number" id="top_k" name="top_k" step=1 value=0><br>
+	  </div>
+
+	  <div>
+	    <label for="repetition_penalty">Repetition Penalty (1=disabled)</label><br>
+	    <input type="number" id="repetition_penalty" name="repetition_penalty" step=0.05 value=1><br>
+	  </div>
+
+	  <div>
+	    <label for="num_beams">num_beams: for Beam Search (1=disabled)</label><br>
+	    <input type="number" id="num_beams" name="num_beams" step=1 value=1><br>
+	  </div>
+	</fieldset>
+
+	<fieldset>
+	  <legend>Mimitext Specific Behavior</legend>
+	  <div>
+	    <label for="autogen">Autogenerate: Repeat generation up to x times</label><br>
+	    <input type="number" id="autogen" name="autogen" step=1 value=1><br>
+	  </div>
+
+	  <div>
+	    <label for="numResponses">Number of Responses</label><br>
+	    <input type="number" id="numResponses" name="numResponses" step=1 value=1><br>
+	  </div>
+	</fieldset>
 	
-	<label for="cTemperature">Temperature (Randomness)</label><br>
-	<input type="number" id="cTemperature" name="cTemperature" step=0.1 value=0.5><br>
-	
-	<label for="numResponses">Number of Responses</label><br>
-	<input type="number" id="numResponses" name="numResponses" step=1 value=1><br>
-	
-	<label for="responseLength">Response Length</label><br>
-	<input type="number" id="responseLength" name="responseLength" step=1 value=40><br>
-	
-	<label for="top_p">top_p (nucleus) sampling</label><br>
-	<input type="number" id="top_p" name="top_p" step=0.01 value=1><br>
-	
-	<label for="top_k">top_k sampling</label><br>
-	<input type="number" id="top_k" name="top_k" step=1 value=0><br>
-	
-	<label for="repetition_penalty">Repetition Penalty (1=disabled)</label><br>
-	<input type="number" id="repetition_penalty" name="repetition_penalty" step=0.05 value=1><br>
-	
-	<label for="num_beams">num_beams: for Beam Search (1=disabled)</label><br>
-	<input type="number" id="num_beams" name="num_beams" step=1 value=1><br>
     </div>
     <div id="fullelement">
       <textarea id="textPanel"></textarea>
