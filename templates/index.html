@@ -75,6 +75,25 @@
       <div id="exitMemorywindowButton" class="normalbutton">Exit Memory Edit</div><br><br>
 
       <fieldset>
+	<legend>Memory-specific Options</legend>
+	<div>
+	  <label for="share">Share</label>
+	  <div>The way the model input is shared between memory and the actual text(+any note).<br>
+	    At the (GPT2) max of 1024, .75 means 768 tokens are reserved for the text itself,<br>
+	    and 256 tokens for the memory. As more memory is added, old memory is forgotten.</div>
+	  <input type="number" id="share" name="share" step=.05 value=.75 /><br>
+	</div>
+	<br>
+	<div>
+	  <label for="noteLinesBack">Note Insertion</label>
+	  <div>The note is added to the main text invisibly x many lines back, default 3.<br>
+	    If you have a very long text with few or no linebreaks, it might not be placed at all.<br>
+	  </div>
+	  <input type="number" id="noteLinesBack" name="noteLinesBack" step=1 value=3 /><br>
+	</div>
+      </fieldset>
+
+      <fieldset>
 	<legend>Note</legend>
 	<textarea id="note"></textarea>
       </fieldset>

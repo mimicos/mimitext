@@ -8,8 +8,20 @@ html, body {
 	max-width: 100%;
 }
 
+#memorywindow {
+    margin: 1em;
+}
+
 #memorywindow legend {
     font-size: max(16px, 2vw);
+}
+
+#memorywindow label {
+    text-decoration: underline;
+}
+
+#memorywindow label, input {
+    font-size: max(1.5vw, 14px);
 }
 
 #exitMemorywindowButton {
@@ -24,6 +36,10 @@ html, body {
 
 #memory {
     height: 50vh;
+}
+
+#share, #noteLinesBack {
+    width: 6em;    
 }
 
 
