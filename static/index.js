@@ -42,7 +42,7 @@ function jsonifyData() {
     var g = function( id ) { return document.getElementById( id ).value; };
 
     var msg = {context: g("textPanel"), cTemperature: g("cTemperature"), numResponses: g("numResponses"), responseLength: g("responseLength"),
-	       top_p: g("top_p"), top_k: g("top_k"), num_beams: g("num_beams"), repetition_penalty: g("repetition_penalty"),
+	       top_p: g("top_p"), top_k: g("top_k"), num_beams: g("num_beams"), repetition_penalty: g("repetition_penalty"), memory: g("memory"), note: g("note"),
 	       token_mode: tokenmode
 	      }
     return msg;
@@ -116,8 +116,7 @@ function clearResponses() {
 function tokenClicked() {
     document.getElementById("textPanel").value += this.textContent;
     clearResponses();
-    //var tt = document.getElementById("tokenTable");
-    //tt.parentNode.removeChild(tt);
+
     if (isPickgenOn()) {
 	requestGenerate();
     }

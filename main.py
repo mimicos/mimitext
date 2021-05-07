@@ -62,8 +62,6 @@ def assembleContext(responseLength, text, memory, note, noteLinesBack = 3, share
     alteredText.insert(-noteLinesBack, note)
     alteredText = "\n".join(alteredText)
 
-    print(alteredText)
-
     textIDs = tokenizer(alteredText, return_tensors="pt").input_ids
     memoryIDs = tokenizer(memory, return_tensors="pt").input_ids
     if memoryIDs.size()[1] > maxMemorySize:
@@ -75,13 +73,16 @@ def assembleContext(responseLength, text, memory, note, noteLinesBack = 3, share
     if textIDs.size()[1] > adjustedMaxTextSize:
         textIDs = textIDs.narrow(1, -adjustedMaxTextSize, adjustedMaxTextSize)
 
-    if memory != "":
+    if memory != "" and text != "":
         totalIDs = torch.cat( (memoryIDs[0], textIDs[0]) )
-    else:
+    elif memory == "" and text != "":
         totalIDs = textIDs[0]
+    elif memory != "" and text == "":
+        totalIDs = memoryIDs[0]
 
+    # Useful diagnostic prints:
     #print(totalIDs.unsqueeze(0), totalIDs.size())
-    print(tokenizer.decode(totalIDs))
+    #print(tokenizer.decode(totalIDs))
     #print(maxTotalInput, maxMemorySize, maxTextSize, share, memoryIDs.size(), textIDs.size(), totalIDs.size(), maxTextSize + maxMemorySize - memoryIDs.size()[1])
     return totalIDs.unsqueeze(0)
     
