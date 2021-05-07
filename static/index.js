@@ -51,18 +51,24 @@ function jsonifyData() {
 function requestGenerate() {
     if (generating) return;
     
+    var json = jsonifyData();
     var data = JSON.stringify(jsonifyData());
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/gen", true);
-    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-    xhr.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-	    verifyResponses(JSON.parse(this.responseText));
-	}
+    if (json.context == "" && json.memory == "" && json.note == "") {
+	alert("No input! Write some text, or put something in memory.");
     }
-    document.getElementById("genButton").classList.add("waiting");
-    generating = true;
-    xhr.send(data);
+    else {
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/gen", true);
+	xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+	xhr.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+		verifyResponses(JSON.parse(this.responseText));
+	    }
+	}
+	document.getElementById("genButton").classList.add("waiting");
+	generating = true;
+	xhr.send(data);
+    }
 }
 
 function checkForResponses() {

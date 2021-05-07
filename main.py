@@ -73,11 +73,13 @@ def assembleContext(responseLength, text, memory, note, noteLinesBack = 3, share
     if textIDs.size()[1] > adjustedMaxTextSize:
         textIDs = textIDs.narrow(1, -adjustedMaxTextSize, adjustedMaxTextSize)
 
-    if memory != "" and text != "":
+    # The logic here could be cleaned up a bit - I'm not sure if I want to keep
+    # notes implemented this way (added to the text) rather than treating them differently
+    if memory != "" and (text != "" or note != ""):
         totalIDs = torch.cat( (memoryIDs[0], textIDs[0]) )
-    elif memory == "" and text != "":
+    elif memory == "" and (text != "" or note != ""):
         totalIDs = textIDs[0]
-    elif memory != "" and text == "":
+    elif memory != "" and (text == "" and note == ""):
         totalIDs = memoryIDs[0]
 
     # Useful diagnostic prints:
