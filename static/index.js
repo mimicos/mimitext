@@ -236,8 +236,13 @@ function softmax(logits) {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById("genButton").addEventListener("click", requestGenerate);
+    
     document.getElementById("optionsButton").addEventListener("click", toggleOptions);
     document.getElementById("exitOptionsButton").addEventListener("click", toggleOptions);
+
+    document.getElementById("memorywindowButton").addEventListener("click", toggleMemorywindow);
+    document.getElementById("exitMemorywindowButton").addEventListener("click", toggleMemorywindow);
+    
     document.getElementById("clearButton").addEventListener("click", clearResponses);
     document.getElementById("pickgenButton").addEventListener("click", pickgenToggle);
     document.getElementById("swapmodeButton").addEventListener("click", swapGenerateToTokens);
