@@ -43,10 +43,47 @@ def dataPreprocess(data):
         data['num_beams'] = int(data['num_beams']) if 'num_beams' in data else 1
         data['repetition_penalty'] = float(data['repetition_penalty']) if 'repetition_penalty' in data else 1.0
         data['token_mode'] = bool(data['token_mode']) if 'token_mode' in data else False
+        data['memory'] = data['memory'] if 'memory' in data else ""
+        data['note'] = data['note'] if 'note' in data else ""
+        data['noteLinesBack'] = int(data['noteLinesBack']) if 'noteLinesBack' in data else 3
+        data['share'] = float(data['share']) if 'share' in data else .75
     except KeyError:
         data['validRequest'] = False
         
     return data
+
+def assembleContext(responseLength, text, memory, note, noteLinesBack = 3, share=.75):
+    #This value is what we have to split between input text and other features, like the "memory"
+    maxTotalInput = MAX_INPUT_LENGTH - responseLength
+    maxMemorySize = int(maxTotalInput * (1 - share))
+    maxTextSize = int(maxTotalInput * share)
+
+    alteredText = text.splitlines()
+    alteredText.insert(-noteLinesBack, note)
+    alteredText = "\n".join(alteredText)
+
+    print(alteredText)
+
+    textIDs = tokenizer(alteredText, return_tensors="pt").input_ids
+    memoryIDs = tokenizer(memory, return_tensors="pt").input_ids
+    if memoryIDs.size()[1] > maxMemorySize:
+        memoryIDs = memoryIDs.narrow(1, -maxMemorySize, maxMemorySize)
+
+    # Whatever you don't use for memory is more room for the text itself
+    adjustedMaxTextSize = (maxTextSize + maxMemorySize - memoryIDs.size()[1])
+    
+    if textIDs.size()[1] > adjustedMaxTextSize:
+        textIDs = textIDs.narrow(1, -adjustedMaxTextSize, adjustedMaxTextSize)
+
+    if memory != "":
+        totalIDs = torch.cat( (memoryIDs[0], textIDs[0]) )
+    else:
+        totalIDs = textIDs[0]
+
+    #print(totalIDs.unsqueeze(0), totalIDs.size())
+    print(tokenizer.decode(totalIDs))
+    #print(maxTotalInput, maxMemorySize, maxTextSize, share, memoryIDs.size(), textIDs.size(), totalIDs.size(), maxTextSize + maxMemorySize - memoryIDs.size()[1])
+    return totalIDs.unsqueeze(0)
     
 def generateText(data):
     global model, tokenizer, mainpipe
@@ -55,13 +92,14 @@ def generateText(data):
             maxInputLength = MAX_INPUT_LENGTH - int(data['responseLength']) # This is how much of the context we can use based on the requested response size
             print("Generating...")
             t1 = time.time()
-            input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
-            #print("input_ids", input_ids)
-            if input_ids.size()[1] > maxInputLength:
-                input_ids = input_ids.narrow(1, -maxInputLength, maxInputLength)
+
+            input_ids = assembleContext(data['responseLength'], data['context'], data['memory'], data['note'], data['noteLinesBack'], data['share'])
+            #input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
+            #if input_ids.size()[1] > maxInputLength:
+            #    input_ids = input_ids.narrow(1, -maxInputLength, maxInputLength)
+
             input_ids = input_ids.to(DEVICE)
-            #print("Resized tokens:", tokenizer.decode(input_ids[0]))
-            #print("len", len(input_ids[0]))
+            #print(input_ids)
             gen_tokens = model.generate(input_ids, do_sample=True, temperature=data['cTemperature'],
                                         max_length=min(MAX_INPUT_LENGTH, input_ids.size()[1] + data['responseLength']),
                                         num_return_sequences=data['numResponses'], top_p=data['top_p'], top_k=data['top_k'],
@@ -89,7 +127,8 @@ def generateTokens(data):
             t1 = time.time()
             maxInputLength = MAX_INPUT_LENGTH - 1 # (we just want one token)
             print("Generating tokens...")
-            input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
+            #input_ids = tokenizer(data['context'], return_tensors="pt").input_ids
+            input_ids = assembleContext(data['responseLength'], data['context'], data['memory'], data['note'], data['noteLinesBack'], data['share'])
             if input_ids.size()[1] > maxInputLength:
                 input_ids = input_ids.narrow(1, -maxInputLength, maxInputLength)
             input_ids = input_ids.to(DEVICE)
