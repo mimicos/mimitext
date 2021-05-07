@@ -8,6 +8,24 @@ html, body {
 	max-width: 100%;
 }
 
+#memorywindow legend {
+    font-size: max(16px, 2vw);
+}
+
+#exitMemorywindowButton {
+    width: 100vw;
+}
+
+#note, #memory {
+    font-size: max(14px, 1.7vw);
+    width: 100%;
+    resize: vertical;
+}
+
+#memory {
+    height: 50vh;
+}
+
 
 #fullelement {
     display: grid;
@@ -19,7 +37,7 @@ html, body {
 }
 
 #textPanel {
-    font-size: 1.7vw;
+    font-size: max(14px, 1.7vw);
     border: none;
     overflow: auto;
     outline: none;
