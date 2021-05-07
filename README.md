@@ -24,7 +24,7 @@ The page brings in an almost blank `custom.css` which may be used to theme the p
 Three responses wait in the response panel. A list of TopK tokens and the tokens after SoftMax are in the rightmost panel. The user is highlighting the "m" in room: a click will only select the text up to and including the "m". If the user clicks a token, such as "into", that will be added instead. If Quickgen were selected, the next step would proceed automatically. As is, the user must click generate to continue.
 
 ## GUI
-There are five buttons making up the webgui right now.
+There are several buttons making up the main GUI right now.
 
 ### Generate
 This sends a request to the server, which is then sent to the model, via POST. The button turns black when a reply from the server is pending. If it stays that way, it's likely the server encountered an error. It's best to refresh the page and reload the program if this happens until more robust erorr handling and recovery is implemented.
@@ -32,8 +32,19 @@ This sends a request to the server, which is then sent to the model, via POST. T
 ### Options
 This displays the **Generation Options** seen below.
 
+### Memory
+Opens the **Memory** window. Here you can add a Note and fill the Memory box. They work a little differently: memory is prepended to the text in the main window, while note is placed somewhere in that text when the model begins to process it. Both can be used to impact the results of text generation and to "steer" it toward "remembering" certain things.
+
+There are two values here as well: **Share** and **Note Insertion**
+
+#### Share
+The share between memory and the main text. This value is applied after the response length. As an example, at the 1024 token default maximum (appropriate for GPT2) and a response length of **40** the share value works like this: 1024 tokens, minus 40 so there's room for the response (now 984) the main text reserves at least 75% of that (738 tokens) leaving 984 * .25 (246) tokens for the memory window. You can put in more memory than this, and the program will use what it can and get rid of the earliest memory tokens if necessary.
+
+#### Note Insertion
+The note is inserted on the basis of lines. By default, it goes back three lines into the text and places it there. *Be warned! Using a value like 1 will change the way tokens are generated in Token Mode. For each newline added, the note will follow, and that may cause the model to want another newline as padding, over and over.*
+
 ### Clear
-This will erase both the possible responses (below the main text) and the list of possible tokens (in token mode). This does NOT erase the text so far in the main panel.
+This will erase both the possible responses (below the main text) and the list of possible tokens (in token mode). This does NOT erase the text window.
 
 ### Quickgen
 When a possible response is clicked, or a token is clicked, the next generate request is made automatically (as if the user had clicked Generate immediately afterward.)
