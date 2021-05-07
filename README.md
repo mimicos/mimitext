@@ -21,7 +21,9 @@ The page brings in an almost blank `custom.css` which may be used to theme the p
 ## Sample
 ![Example](demo/demo_01.png)
 
-Three responses wait in the response panel. A list of TopK tokens and the tokens after SoftMax are in the rightmost panel. The user is highlighting the "m" in room: a click will only select the text up to and including the "m". If the user clicks a token, such as "into", that will be added instead. If Quickgen were selected, the next step would proceed automatically. As is, the user must click generate to continue.
+The text, which can be freely altered, is in the upper-left panel. New responses or tokens are added here, when clicked upon.
+Three separate responses wait in the response panel (bottom). The `g` is highlighted: the response is only added up to the point the user clicks on, allowing them to quickly accept a partial response before generating another.
+On the right: Two lists of the top 100 tokens can be clicked on if the user wants more control over the progression. Additionally, the darker inner shading through the words represents the probability of each token being chosen randomly. The tokens are sorted from most to least likely. In this case, `into` is the most likely candidate, but when a random sample was performed, chance chose `the` instead.
 
 ## GUI
 There are five buttons making up the webgui right now.
