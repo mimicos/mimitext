@@ -71,8 +71,22 @@
 	</fieldset>
 	
     </div>
+    <div id="memorywindow" class="hidden">
+      <div id="exitMemorywindowButton" class="normalbutton">Exit Memory Edit</div><br><br>
+
+      <fieldset>
+	<legend>Note</legend>
+	<textarea id="note"></textarea>
+      </fieldset>
+
+      <fieldset>
+	<legend>Memory</legend>
+	<textarea id="memory"></textarea>
+      </fieldset>
+    </div>
     <div id="fullelement">
       <textarea id="textPanel"></textarea>
+
       <div id="tokenPanel"></div>
       <div id="bottomPanel"></div>
       <div id="sparePanel"></div>
@@ -81,6 +95,7 @@
       <div id="buttonRow">
 	<div id="genButton" class="normalbutton">Generate</div>
 	<div id="optionsButton" class="normalbutton">Options</div>
+	<div id="memorywindowButton" class="normalbutton">Memory</div>
 	<div id="clearButton" class="normalbutton">Clear</div>
 	<div id="pickgenButton" class="normalbutton">Quickgen</div>
 	<div id="swapmodeButton" class="normalbutton">Token Mode</div>

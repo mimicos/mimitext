@@ -141,7 +141,7 @@ html, body {
 #buttonRow {
     grid-column-start: 1;
     grid-row-start: 3;
-	width: 100%;
+    width: 100%;
     margin: 2px;
     text-align: center;
     display: table;
@@ -152,7 +152,6 @@ html, body {
 .normalbutton { 
   display: table-cell;
   text-align: center;
-  width: 18%;
   padding: 4px;
   background-color: #333333;
   color: white;

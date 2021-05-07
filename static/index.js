@@ -24,8 +24,6 @@ function updateResponsesWithListeners() {
 		    position++;
 		    el = el.previousSibling;
                 }
-                //console.log(this.innerHTML + ':' + position);
-		//console.log(this.parentElement.getElementsByClassName('fulltext')[0].textContent.slice(0, position));
 		document.getElementById("textPanel").value += this.parentElement.getElementsByClassName('fulltext')[0].textContent.slice(0, position);
 		clearResponses();
 		generated = 0;
@@ -173,9 +171,38 @@ function createTokens(jsonData) {
     }
 }
 
+//Standard path to hiding other UI elements to display a particular one afterward.
+function hideUI() {
+    document.getElementById("options").classList.add("hidden");
+    document.getElementById("fullelement").classList.add("hidden");
+    document.getElementById("memorywindow").classList.add("hidden");
+}
+
 function toggleOptions() {
-    document.getElementById("options").classList.toggle("hidden");
-    document.getElementById("fullelement").classList.toggle("hidden");
+    options = document.getElementById("options");
+    if (options.classList.contains("hidden")) {
+	hideUI();
+	options.classList.remove("hidden");
+
+    }
+    else {
+	hideUI();
+	document.getElementById("fullelement").classList.remove("hidden");
+    }
+}
+
+//a dirty copypaste; if we're going to have so many windows we should generalize this soon
+function toggleMemorywindow() {
+    memorywindow = document.getElementById("memorywindow");
+    if (memorywindow.classList.contains("hidden")) {
+	hideUI();
+	memorywindow.classList.remove("hidden");
+
+    }
+    else {
+	hideUI();
+	document.getElementById("fullelement").classList.remove("hidden");
+    }
 }
 
 function isPickgenOn() {
@@ -199,6 +226,7 @@ function swapGenerateToTokens() {
 }
 
 // src: https://gist.github.com/cyphunk/6c255fa05dd30e69f438a930faeb53fe#gistcomment-3649882
+// Client-side softmax to shave just a little demand off the server.
 function softmax(logits) {
     const maxLogit = Math.max(...logits);
     const scores = logits.map(l => Math.exp(l - maxLogit));
