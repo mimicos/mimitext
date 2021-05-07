@@ -22,7 +22,9 @@ The page brings in an almost blank `custom.css` which may be used to theme the p
 ![Example](demo/demo_01.png)
 
 The text, which can be freely altered, is in the upper-left panel. New responses or tokens are added here, when clicked upon.
+
 Three separate responses wait in the response panel (bottom). The `g` is highlighted: the response is only added up to the point the user clicks on, allowing them to quickly accept a partial response before generating another.
+
 On the right: Two lists of the top 100 tokens can be clicked on if the user wants more control over the progression. Additionally, the darker inner shading through the words represents the probability of each token being chosen randomly. The tokens are sorted from most to least likely. In this case, `into` is the most likely candidate, but when a random sample was performed, chance chose `the` instead.
 
 ## GUI
