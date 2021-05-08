@@ -27,6 +27,9 @@ Three separate responses wait in the response panel (bottom). The `g` is highlig
 
 On the right: Two lists of the top 100 tokens can be clicked on if the user wants more control over the progression. Additionally, the darker inner shading through the words represents the probability of each token being chosen randomly. The tokens are sorted from most to least likely. In this case, `into` is the most likely candidate, but when a random sample was performed, chance chose `the` instead.
 
+## Animated Sample
+![Animated Example](demo/mimitext.gif)
+
 ## GUI
 There are several buttons making up the main GUI right now.
 
