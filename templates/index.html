@@ -19,44 +19,44 @@
 	  <div>
 	    <label for="cTemperature">Temperature</label><br>
 	    <div>Randomess of the result. Values between 0.3~0.7 tend to be OK.</div>
-	    <input type="number" id="cTemperature" name="cTemperature" step=0.1 value=0.5 /><br>
+	    <input type="number" id="cTemperature" name="cTemperature" step=0.1 value=0.5 min=0 max=999 /><br>
 	  </div>
 	  
 	  <div>
 	    <label for="responseLength">Response Length</label><br>
 	    <div>Time taken for a response scales linearly with length.<br>
 	      If you don't like a lot of responses, try smaller values for quicker returns.</div>
-	    <input type="number" id="responseLength" name="responseLength" step=1 value=40 /><br>
+	    <input type="number" id="responseLength" name="responseLength" step=1 value=40 min=1 /><br>
 	  </div>
 	  
 	  <div>
 	    <label for="top_p">top_p</label><br>
 	    <div>Nucelus sampling restricts the possible results to the sum of probabilities < this value.<br>This effectively prunes very unlikely results, which affects how the temperature will work.<br>Disable with value 1.</div>
-	    <input type="number" id="top_p" name="top_p" step=0.01 value=1 /><br>
+	    <input type="number" id="top_p" name="top_p" step=0.01 value=1 max=1 /><br>
 	  </div>
 
 	  <div>
 	    <label for="top_k">top_k</label><br>
 	    <div>Restricts the samples to the top k results. 0 to disable.</div>
-	    <input type="number" id="top_k" name="top_k" step=1 value=0 /><br>
+	    <input type="number" id="top_k" name="top_k" step=1 value=0 min=0 max=50000 /><br>
 	  </div>
 
 	  <div>
 	    <label for="repetition_penalty">Repetition Penalty</label><br>
 	    <div>Encourages the model to return more creative or interesting results by lowering the probability of tokens that have shown up frequently.<br>Try values like 1.05 to 1.15. Values <1 are a bonus to repetition. 1 to disable.</div>
-	    <input type="number" id="repetition_penalty" name="repetition_penalty" step=0.05 value=1 /><br>
+	    <input type="number" id="repetition_penalty" name="repetition_penalty" step=0.05 value=1 min=0 /><br>
 	  </div>
 
 	  <div>
 	    <label for="num_beams">num_beams</label><br>
 	    <div>For beam search. Disabled with value 1.</div>
-	    <input type="number" id="num_beams" name="num_beams" step=1 value=1 /><br>
+	    <input type="number" id="num_beams" name="num_beams" step=1 value=1 min=1 max=999 /><br>
 	  </div>
 	  
 	  <div>
 	    <label for="numResponses">Number of Responses</label><br>
 	    <div>Batch generation. Raises memory requirement.</div>
-	    <input type="number" id="numResponses" name="numResponses" step=1 value=1 /><br>
+	    <input type="number" id="numResponses" name="numResponses" step=1 value=1 min=1 max=100 /><br>
 	  </div>
 	</fieldset>
 
@@ -65,7 +65,7 @@
 	  <div>
 	    <label for="autogen">Autogenerate</label><br>
 	    <div>Acts like you''ve hit the Generate button x times, adding all the responses to the response window one after another.</div>
-	    <input type="number" id="autogen" name="autogen" step=1 value=1 /><br>
+	    <input type="number" id="autogen" name="autogen" step=1 value=1 min=1 /><br>
 	  </div>
 
 	</fieldset>
@@ -81,7 +81,7 @@
 	  <div>The way the model input is shared between memory and the actual text(+any note).<br>
 	    At the (GPT2) max of 1024, .75 means 768 tokens are reserved for the text itself,<br>
 	    and 256 tokens for the memory. As more memory is added, old memory is forgotten.</div>
-	  <input type="number" id="share" name="share" step=.05 value=.75 /><br>
+	  <input type="number" id="share" name="share" step=.05 value=.75 min=0 max=1 /><br>
 	</div>
 	<br>
 	<div>
@@ -89,7 +89,7 @@
 	  <div>The note is added to the main text invisibly x many lines back, default 3.<br>
 	    If you have a very long text with few or no linebreaks, it might not be placed at all.<br>
 	  </div>
-	  <input type="number" id="noteLinesBack" name="noteLinesBack" step=1 value=3 /><br>
+	  <input type="number" id="noteLinesBack" name="noteLinesBack" step=1 value=3 min=1 /><br>
 	</div>
       </fieldset>
 
