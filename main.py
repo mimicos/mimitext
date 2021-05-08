@@ -17,6 +17,8 @@ config.read("config.ini")
 
 running = True
 modelpath = sys.argv[1]
+model = None
+tokenizer = None
 
 BIND_ADDRESS = config['Settings']['BindAddress']
 BIND_PORT = int(config['Settings']['BindPort'])
@@ -163,33 +165,33 @@ def generateTokens(data):
             t2 = time.time()
             print("Finished generating tokens in", t2-t1)
             return response;
-        
-# Load the language model
-print("Loading model at", modelpath)
-t1 = time.time()
-model = AutoModelForCausalLM.from_pretrained(modelpath)
-t2 = time.time()
-if HALF_PRECISION:
-    model.to(torch.float16)
-model.to(DEVICE)
-model.eval()
-tokenizer = AutoTokenizer.from_pretrained(modelpath)
-print("Model+tokenizer loaded in", t2-t1, "seconds")
 
-# Initialize flask, the webserver providing the frontend interface
-mainpipe, webservpipe = multiprocessing.Pipe()
-webservprocess = multiprocessing.Process(target=runFlask, args=(webservpipe,))
-webservprocess.start()
+if __name__ == '__main__':
+    # Load the language model
+    print("Loading model at", modelpath)
+    t1 = time.time()
+    model = AutoModelForCausalLM.from_pretrained(modelpath)
+    t2 = time.time()
+    if HALF_PRECISION:
+        model.to(torch.float16)
+    model.to(DEVICE)
+    model.eval()
+    tokenizer = AutoTokenizer.from_pretrained(modelpath)
+    print("Model+tokenizer loaded in", t2-t1, "seconds")
 
-while running:
-    if GC_EVERY_TIME:
-        gc.collect()
-        torch.cuda.empty_cache()
-    wsdata = mainpipe.recv()
-    wsdata = dataPreprocess(wsdata)
+    # Initialize flask, the webserver providing the frontend interface
+    mainpipe, webservpipe = multiprocessing.Pipe()
+    webservprocess = multiprocessing.Process(target=runFlask, args=(webservpipe,))
+    webservprocess.start()
+    while running:
+        if GC_EVERY_TIME:
+            gc.collect()
+            torch.cuda.empty_cache()
+        wsdata = mainpipe.recv()
+        wsdata = dataPreprocess(wsdata)
 
-    if wsdata['validRequest']:
-        if wsdata['token_mode']:
-            mainpipe.send(generateTokens(wsdata))
-        else:
-            mainpipe.send(generateText(wsdata))
+        if wsdata['validRequest']:
+            if wsdata['token_mode']:
+                mainpipe.send(generateTokens(wsdata))
+            else:
+                mainpipe.send(generateText(wsdata))
