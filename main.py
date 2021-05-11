@@ -1,4 +1,4 @@
-import sys, time, gc, configparser
+import sys, time, gc, configparser, inspect
 import webserver, multiprocessing # The webserver frontend bits
 from transformers import AutoModelForCausalLM, AutoTokenizer # The transformer bits
 import torch
@@ -49,6 +49,8 @@ def dataPreprocess(data):
         data['note'] = data['note'] if 'note' in data else ""
         data['noteLinesBack'] = int(data['noteLinesBack']) if 'noteLinesBack' in data else 3
         data['share'] = float(data['share']) if 'share' in data else .75
+        data['repetition_penalty_range'] = float(data['repetition_penalty_range']) if 'repetition_penalty_range' in data else 300
+        data['repetition_penalty_slope'] = float(data['repetition_penalty_slope']) if 'repetition_penalty_slope' in data else 3.33
     except KeyError:
         data['validRequest'] = False
         
@@ -104,11 +106,38 @@ def generateText(data):
             #    input_ids = input_ids.narrow(1, -maxInputLength, maxInputLength)
 
             input_ids = input_ids.to(DEVICE)
-            #print(input_ids)
-            gen_tokens = model.generate(input_ids, do_sample=True, temperature=data['cTemperature'],
-                                        max_length=min(MAX_INPUT_LENGTH, input_ids.size()[1] + data['responseLength']),
-                                        num_return_sequences=data['numResponses'], top_p=data['top_p'], top_k=data['top_k'],
-                                        num_beams=data['num_beams'], repetition_penalty=data['repetition_penalty'])
+
+            # Check for finetuneanon's fork of transformers, which has extra features--
+            # *or* this will work if those features make it to mainline (and keep the same names)
+            if 'repetition_penalty_range' in inspect.signature(model.generate).parameters:
+                print(" repetition_penalty range and slope available")
+                gen_tokens = model.generate(input_ids,
+                                            do_sample=True,
+                                            temperature=data['cTemperature'],
+                                            max_length=min(MAX_INPUT_LENGTH,
+                                                           input_ids.size()[1] + data['responseLength']),
+                                            num_return_sequences=data['numResponses'],
+                                            top_p=data['top_p'], top_k=data['top_k'],
+                                            num_beams=data['num_beams'],
+                                            repetition_penalty=data['repetition_penalty'],
+                                            repetition_penalty_range = data['repetition_penalty_range'],
+                                            repetition_penalty_slope = data['repetition_penalty_slope']
+                )
+            # else fall back to the transformers 4.5.1 style call;
+            # is there a way to do this within one function call attempt?
+            else:
+                print(" repetition_penalty range and slope NOT available")
+                gen_tokens = model.generate(input_ids,
+                                            do_sample=True,
+                                            temperature=data['cTemperature'],
+                                            max_length=min(MAX_INPUT_LENGTH,
+                                                           input_ids.size()[1] + data['responseLength']),
+                                            num_return_sequences=data['numResponses'],
+                                            top_p=data['top_p'], top_k=data['top_k'],
+                                            num_beams=data['num_beams'],
+                                            repetition_penalty=data['repetition_penalty']
+                )
+                
             sequences = []
             strsequences = []
             for x in gen_tokens:
