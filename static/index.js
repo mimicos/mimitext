@@ -44,6 +44,7 @@ function jsonifyData() {
     var msg = {context: g("textPanel"), cTemperature: g("cTemperature"), numResponses: g("numResponses"), responseLength: g("responseLength"),
 	       top_p: g("top_p"), top_k: g("top_k"), num_beams: g("num_beams"), repetition_penalty: g("repetition_penalty"),
 	       memory: g("memory"), note: g("note"), share: g("share"), noteLinesBack: g("noteLinesBack"),
+	       repetition_penalty_range: g("repetition_penalty_range"), repetition_penalty_slope: g("repetition_penalty_slope"),
 	       token_mode: tokenmode
 	      }
     return msg;

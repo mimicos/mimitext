@@ -48,6 +48,25 @@
 	  </div>
 
 	  <div>
+	    <label for="repetition_penalty_range">Repetition Penalty Range</label><br>
+	    <div>How far back the repetition penalty is applied.<br>
+	      At the time of writing this requires a fork of transformers with this feature applied.<br>
+	      To install:<br>
+	      pip uninstall transformers<br>
+	      pip install git+https://github.com/finetuneanon/transformers@gpt-neo-dungeon-localattention1<br>
+	      Visit <a href="https://github.com/finetuneanon/transformers">this link</a> to view the changes.</div>
+	    <input type="number" id="repetition_penalty_range" name="repetition_penalty_range" step=10 value=300 min=0 /><br>
+	  </div>
+	  
+	  <div>
+	    <label for="repetition_penalty_slope">Repetition Penalty Slope</label><br>
+	    <div>The slope determines how much a token is penalized based on how far back in the text it is.<br>
+	      As above, it requires that the transformers library has this featured added or the fork installed in place of it.<br>
+	      Without that, this value and the above one will not do anything.</div>
+	    <input type="number" id="repetition_penalty_slope" name="repetition_penalty_slope" step=.1 value=3.33 min=0.01 /><br>
+	  </div>
+	  
+	  <div>
 	    <label for="num_beams">num_beams</label><br>
 	    <div>For beam search. Disabled with value 1.</div>
 	    <input type="number" id="num_beams" name="num_beams" step=1 value=1 min=1 max=999 /><br>
