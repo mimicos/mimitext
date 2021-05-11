@@ -49,7 +49,7 @@ def dataPreprocess(data):
         data['note'] = data['note'] if 'note' in data else ""
         data['noteLinesBack'] = int(data['noteLinesBack']) if 'noteLinesBack' in data else 3
         data['share'] = float(data['share']) if 'share' in data else .75
-        data['repetition_penalty_range'] = float(data['repetition_penalty_range']) if 'repetition_penalty_range' in data else 300
+        data['repetition_penalty_range'] = int(data['repetition_penalty_range']) if 'repetition_penalty_range' in data else 300
         data['repetition_penalty_slope'] = float(data['repetition_penalty_slope']) if 'repetition_penalty_slope' in data else 3.33
     except KeyError:
         data['validRequest'] = False
