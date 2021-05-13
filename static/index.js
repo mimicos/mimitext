@@ -253,4 +253,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById("clearButton").addEventListener("click", clearResponses);
     document.getElementById("pickgenButton").addEventListener("click", pickgenToggle);
     document.getElementById("swapmodeButton").addEventListener("click", swapGenerateToTokens);
+
+    document.addEventListener('keydown', function(event) {
+	if (event.ctrlKey && event.key === 'e') {
+	    requestGenerate();
+	}
+    });
 })
+
