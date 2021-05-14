@@ -228,5 +228,4 @@ if __name__ == '__main__':
             responseData.update(tokenData)
             responseData.update(textData)
 
-            print(responseData)
             mainpipe.send(responseData)
