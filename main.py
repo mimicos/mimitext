@@ -147,8 +147,6 @@ def generateText(data):
                 strsequences.append(new)
             response = {
                 "responses": strsequences,
-                "topk_tokens": [],
-                "softmax_tokens": []
             }
             t2 = time.time()
             print("Finished in {} seconds".format(t2-t1))
@@ -185,7 +183,6 @@ def generateTokens(data):
                 topk_probs.append(float(logits[0][topk_tolist[i]]))
 
             response = {
-                "responses": [],
                 "topk_tokens": topk_list,
                 "softmax_tokens": sampled_list,
                 "sampled_probs": sampled_probs,
@@ -220,7 +217,16 @@ if __name__ == '__main__':
         wsdata = dataPreprocess(wsdata)
 
         if wsdata['validRequest']:
-            if wsdata['token_mode']:
-                mainpipe.send(generateTokens(wsdata))
-            else:
-                mainpipe.send(generateText(wsdata))
+            # Tokens-only path
+            responseData = {"responses": [], "topk_tokens": [], "softmax_tokens": [], "sampled_probs": [], "topk_probs": []}
+
+            tokenData = generateTokens(wsdata)
+            textData = {}
+            if not wsdata['token_mode']:
+                textData = generateText(wsdata)
+
+            responseData.update(tokenData)
+            responseData.update(textData)
+
+            print(responseData)
+            mainpipe.send(responseData)
