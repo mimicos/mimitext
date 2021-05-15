@@ -2,10 +2,15 @@
 
 ## Launching
 After installing the requirements via a method like `python -m pip install -r requirements.txt`,
+
 `python main.py /path/to/your/model`
+
 or
+
 `python.exe main.py C:\path\to\your\model`
+
 Huggingface's list of models ( https://huggingface.co/models ) are also appropriate arguments:
+
 `python main.py EleutherAI/gpt-neo-1.3B`
 
 ## Overview
