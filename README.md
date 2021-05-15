@@ -1,5 +1,13 @@
 # mimitext
 
+## Launching
+After installing the requirements via a method like `python -m pip install -r requirements.txt`,
+`python main.py /path/to/your/model`
+or
+`python.exe main.py C:\path\to\your\model`
+Huggingface's list of models ( https://huggingface.co/models ) are also appropriate arguments:
+`python main.py EleutherAI/gpt-neo-1.3B`
+
 ## Overview
 
 Mimitext is an interface to Huggingface's transformers library, providing a simple user interface for customized inference. It generates text based on the text you give it. This can be used as a writing aid, for experimentation on an AI model, or played like an interactive story. There are a number of configurable options and a few features that I believe are unique to this software at the time of writing.
