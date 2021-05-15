@@ -17,7 +17,7 @@ Huggingface's list of models ( https://huggingface.co/models ) are also appropri
 
 Mimitext is an interface to Huggingface's transformers library, providing a simple user interface for customized inference. It generates text based on the text you give it. This can be used as a writing aid, for experimentation on an AI model, or played like an interactive story. There are a number of configurable options and a few features that I believe are unique to this software at the time of writing.
 
-It's caleld Mimitext because of my username and because after nine days I couldn't think of a good name.
+It's called Mimitext because of my username and because after nine days I couldn't think of a good name.
 
 This is provided via **Flask** and runs on **localhost**. Despite being a simple webserver, mimitext is currently *not intended for more than one user at a time.* It will likely break horribly in that scenario right now, although a goal is to make it functional for a small number of users. It still isn't intended to be public-facing, where malicious users could intentionally send requests to slow it down.
 
