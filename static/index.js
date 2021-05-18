@@ -66,6 +66,11 @@ function requestGenerate() {
 	    if (this.readyState == 4 && this.status == 200) {
 		verifyResponses(JSON.parse(this.responseText));
 	    }
+	    else if (this.readyState == 4 && this.status != 200) {
+		generating = false;
+		alert("Error " + this.status + "; the model may have encountered an error. Try closing and restarting main.py.");
+		document.getElementById("genButton").classList.remove("waiting");
+	    }
 	}
 	document.getElementById("genButton").classList.add("waiting");
 	generating = true;
