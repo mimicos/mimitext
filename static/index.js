@@ -149,11 +149,13 @@ function createTokens(jsonData) {
     var tr1 = document.createElement("tr");
     ttable.appendChild(tr1);
     var th1 = document.createElement("th");
-    th1.textContent = "TopK";
-    var th2 = document.createElement("th");
-    th2.textContent = "Sampled";
+    th1.textContent = "Top";
+
+    //var th2 = document.createElement("th");
+    //th2.textContent = "Sampled";
     tr1.appendChild(th1);
-    tr1.appendChild(th2);
+
+    //tr1.appendChild(th2);
 
     // Softmaxing
     topk_probs = softmax(jsonData.topk_probs)
@@ -172,14 +174,14 @@ function createTokens(jsonData) {
 	td1bar.style.height = (topk_probs[x]*100)+"%";
 	td1.appendChild(td1bar);
 	
-	var td2 = document.createElement("td");
-	td2.textContent = jsonData.softmax_tokens[x];
-	td2.addEventListener('click', tokenClicked);
-	row.appendChild(td2);
-	var td2bar = document.createElement("div");
-	td2bar.classList.add("percentbar");
-	td2bar.style.height = (sampled_probs[x]*100)+"%";
-	td2.appendChild(td2bar);
+	//var td2 = document.createElement("td");
+	//td2.textContent = jsonData.softmax_tokens[x];
+	//td2.addEventListener('click', tokenClicked);
+	//row.appendChild(td2);
+	//var td2bar = document.createElement("div");
+	//td2bar.classList.add("percentbar");
+	//td2bar.style.height = (sampled_probs[x]*100)+"%";
+	//td2.appendChild(td2bar);
     }
 }
 
