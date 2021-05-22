@@ -406,7 +406,8 @@ def new_forward(
             all_self_attentions = all_self_attentions + (outputs[2 if use_cache else 1],)
 
         if breakmodel:
-            torch.cuda.synchronize()
+            if i in range(ram_blocks):
+                torch.cuda.synchronize()
 
     if breakmodel:
         del copystream
