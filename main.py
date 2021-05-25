@@ -2,7 +2,7 @@ import sys, time, gc, configparser, inspect
 import webserver, multiprocessing # The webserver frontend bits
 from transformers import AutoModelForCausalLM, AutoTokenizer # The transformer bits
 import torch
-
+import torch.cuda.comm
 
 if len(sys.argv) < 2:
     print("")
