@@ -26,6 +26,8 @@ MAX_INPUT_LENGTH = int(config['Settings']['MaxInputLength'])
 DEVICE = config['Settings']['Device']
 GC_EVERY_TIME = config['Settings']['UseGC'] == "yes"
 HALF_PRECISION = config['Settings']['HalfPrecision'] == "yes"
+MODIFIED_LOADING = config['Settings']['ModifiedLoading'] == "yes"
+RAM_BLOCKS = int(config['Settings']['RamBlocks'])
 
 print("Model path: " + modelpath)
 
@@ -212,7 +214,7 @@ def new_forward(
 
     if breakmodel:
         
-        global ram_blocks
+        global RAM_BLOCKS
         
         if not hasattr(self, 'extrastorage'):
             import copy
@@ -221,7 +223,7 @@ def new_forward(
             self.wpe.to("cuda")
             self.ln_f.to("cuda")
             torch.cuda.empty_cache()
-            for i in range(ram_blocks):
+            for i in range(RAM_BLOCKS):
                 self.h[i].to("cpu")
                 self.extrastorage[i] = copy.deepcopy(self.h[i])
                 smalltensor = torch.tensor(0).to("cuda")
@@ -229,7 +231,7 @@ def new_forward(
                     param1.data = smalltensor
                 self.h[i].to("cuda")
 
-            for i in range(ram_blocks,len(self.h)):
+            for i in range(RAM_BLOCKS,len(self.h)):
                 self.h[i].to("cuda")
 
             for param in self.wte.parameters():
@@ -242,7 +244,7 @@ def new_forward(
                     param.requires_grad = False
             for param in self.ln_f.parameters():
                 param.requires_grad = False
-            for i in range(ram_blocks):
+            for i in range(RAM_BLOCKS):
                 for param in self.extrastorage[i].parameters():
                     param.requires_grad = False
                     param.data.pin_memory()
@@ -252,7 +254,7 @@ def new_forward(
                 param1.data = param2.data.to("cuda", non_blocking=False)
             self.h[len(self.h)-1].to("cuda", non_blocking=False)
 
-            for param1,param2 in zip(self.h[ram_blocks-1].parameters(),self.extrastorage[ram_blocks-1].parameters()):
+            for param1,param2 in zip(self.h[RAM_BLOCKS-1].parameters(),self.extrastorage[RAM_BLOCKS-1].parameters()):
                 param1.data = param2.data.to("cuda", non_blocking=False)
             self.h[len(self.h)-1].to("cuda", non_blocking=False)
 
@@ -351,9 +353,9 @@ def new_forward(
     for i, (block, layer_past) in enumerate(zip(self.h, past_key_values)):
 
         if breakmodel :
-            if i in range(ram_blocks):
-                index1 = (i+1)%ram_blocks
-                for param1,param2 in zip(self.h[index1].parameters(),self.h[(i-1)%ram_blocks].parameters()):
+            if i in range(RAM_BLOCKS):
+                index1 = (i+1)%RAM_BLOCKS
+                for param1,param2 in zip(self.h[index1].parameters(),self.h[(i-1)%RAM_BLOCKS].parameters()):
                     param1.data = param2.data
                 for param1,param2 in zip(self.h[index1].parameters(),self.extrastorage[index1].parameters()):
                     with torch.cuda.stream(copystream):
@@ -406,7 +408,7 @@ def new_forward(
             all_self_attentions = all_self_attentions + (outputs[2 if use_cache else 1],)
 
         if breakmodel:
-            if i in range(ram_blocks):
+            if i in range(RAM_BLOCKS):
                 torch.cuda.synchronize()
 
     if breakmodel:
@@ -441,9 +443,7 @@ if __name__ == '__main__':
     if HALF_PRECISION:
         model.to(torch.float16)
     
-    modified_loading = True
-    
-    if not modified_loading:
+    if not MODIFIED_LOADING:
         model.to(DEVICE)
         model.eval()
     else:
@@ -456,7 +456,6 @@ if __name__ == '__main__':
         model.transformer.ln_f.to("cuda")
         # Number of blocks that will be on on RAM
         breakmodel = True
-        ram_blocks = 7
         #Import libraries where forward pass is located
         from transformers import GPTNeoForCausalLM,GPTNeoModel
         from transformers.modeling_outputs import BaseModelOutputWithPast
