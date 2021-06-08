@@ -263,7 +263,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     document.addEventListener('keydown', function(event) {
 	if (event.ctrlKey && event.key === 'e') {
+	    event.preventDefault();
 	    requestGenerate();
+	    return false;
 	}
     });
 })
