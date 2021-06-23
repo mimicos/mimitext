@@ -19,6 +19,11 @@ running = True
 modelpath = sys.argv[1]
 model = None
 tokenizer = None
+vocab = None
+
+bannedValues = ["[", "]", "<|endoftext|>"]
+bannedTokens = []
+bannedTokenIDs = []
 
 BIND_ADDRESS = config['Settings']['BindAddress']
 BIND_PORT = int(config['Settings']['BindPort'])
@@ -123,7 +128,8 @@ def generateText(data):
                                             num_beams=data['num_beams'],
                                             repetition_penalty=data['repetition_penalty'],
                                             repetition_penalty_range = data['repetition_penalty_range'],
-                                            repetition_penalty_slope = data['repetition_penalty_slope']
+                                            repetition_penalty_slope = data['repetition_penalty_slope'],
+                                            bad_words_ids=bannedTokenIDs
                 )
             # else fall back to the transformers 4.5.1 style call;
             # is there a way to do this within one function call attempt?
@@ -137,7 +143,8 @@ def generateText(data):
                                             num_return_sequences=data['numResponses'],
                                             top_p=data['top_p'], top_k=data['top_k'],
                                             num_beams=data['num_beams'],
-                                            repetition_penalty=data['repetition_penalty']
+                                            repetition_penalty=data['repetition_penalty'],
+                                            bad_words_ids=bannedTokenIDs
                 )
                 
             sequences = []
@@ -433,6 +440,18 @@ def new_forward(
         attentions=all_self_attentions,
     )
 
+# Requirement: tokenizer loaded in main
+def updateBanned():
+    global bannedTokens, bannedTokenIDs
+    bannedTokens = []
+    bannedTokenIDs = []
+    for k in vocab.keys():
+        for b in bannedValues:
+            if b in k:
+                bannedTokens.append(k)
+    for x in bannedTokens:
+        bannedTokenIDs.append([vocab[x]])
+    print("Banned tokens: {} - Banned IDs: {}".format(bannedTokens, bannedTokenIDs))
 
 if __name__ == '__main__':
     # Load the language model
@@ -464,6 +483,8 @@ if __name__ == '__main__':
         GPTNeoModel.forward = new_forward
         
     tokenizer = AutoTokenizer.from_pretrained(modelpath)
+    vocab = tokenizer.get_vocab()
+    updateBanned()
     print("Model+tokenizer loaded in", t2-t1, "seconds")
 
     # Initialize flask, the webserver providing the frontend interface
